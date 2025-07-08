@@ -1,41 +1,45 @@
+// Example basic server setup
 import dotenv from "dotenv";
 import express from "express";
 import connectDB from "./db/index.js";
+import userRouter from "./routes/user.routes.js";
 
 dotenv.config({
   path: "./.env",
 });
 
-connectDB()
-  .then(() => {
-    app.listen(process.env.PORT || 8000, () => {
-      console.log(`Server is running at Port: ${process.env.PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.log("MONGO db connection failed !!!", err);
-  });
-
 const app = express();
+
+app.use((req, res, next) => {
+  console.log("Incoming request:", req.method, req.url, req.headers['content-type']);
+  next();
+});
+
+// ✅ Add body parser middleware for JSON
+app.use(express.json());
+
+// ✅ Example POST route
+app.post("/api/v1/users/register", (req, res) => {
+  console.log("Request body:", req.body);
+  res.json({ message: "Registration is working!", body: req.body });
+});
 
 (async () => {
   try {
     await connectDB();
 
-    app.on("error", (err) => {
-      console.error("Server error:", err);
-      throw err;
+    const PORT = process.env.PORT || 8000;
+    app.listen(PORT, () => {
+      console.log(`✅ Server is running at Port: ${PORT}`);
     });
-
-    app.listen(process.env.PORT, () => {
-      console.log(` Server listening on port ${process.env.PORT}`);
-    });
-  } catch (error) {
-    console.error(" Startup error:", error);
+  } catch (err) {
+    console.error("❌ Startup error:", err);
     process.exit(1);
   }
 
-  app.get("/", (req, res) => {
-    res.send("Hello, your server is up and MongoDB is connected!");
-  });
+  app.get("/test", (req, res) => {
+  console.log("GET /test route hit!");
+  res.send("Test route working!");
+});
+
 })();
