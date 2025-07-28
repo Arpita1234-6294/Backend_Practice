@@ -10,19 +10,24 @@ dotenv.config({
 
 const app = express();
 
+
 app.use((req, res, next) => {
   console.log("Incoming request:", req.method, req.url, req.headers['content-type']);
   next();
 });
 
-// ✅ Add body parser middleware for JSON
-app.use(express.json());
 
-// ✅ Example POST route
-app.post("/api/v1/users/register", (req, res) => {
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+
+/*app.post("/api/v1/users/register", (req, res) => {
   console.log("Request body:", req.body);
   res.json({ message: "Registration is working!", body: req.body });
-});
+});*/
+
+app.use("/api/v1/users", userRouter);
 
 (async () => {
   try {

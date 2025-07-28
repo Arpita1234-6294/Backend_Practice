@@ -12,7 +12,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     if (!localFilePath) return null;
 
     const response = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "auto", // ✅ typo fixed
+      resource_type: "auto", 
     });
 
     console.log("File uploaded successfully:", response.url);
@@ -28,5 +28,4 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 };
 
-// ✅ Correct export
 export { uploadOnCloudinary };
